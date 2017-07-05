@@ -1,19 +1,20 @@
 with educater as(
 select sme.educator_id, count(distinct sme.id) as count
 from seminar_events as sme
-group by sme.educator_id)
-select usr.id, usr.login, usr.first_name, usr.last_name, usr.email, usr.mobile_number, usr.login_count,
-usr.failed_login_count, to_char(usr.last_request_at,  'DD.MM.YYYY'),
-(select edt."count" from educater as edt where usr.id = edt.educator_id ),
+group by sme.educator_id),
+users_r as (
+select usr.id, usr.login, usr.first_name, usr.last_name, usr.email, lower(usr.email) as standart_email,  usr.mobile_number, 
+(case when char_length(usr.mobile_number) > 9 then replace(replace(replace(replace(replace(replace(usr.mobile_number, '+', ''), '(', '' ), ')', ''), '-', ''), ' ', ''), '−', '') else Null end) as standart_mobile,
+usr.login_count,
+usr.failed_login_count, to_char(usr.last_request_at,  'DD.MM.YYYY') as last_request,
+(select edt."count" from educater as edt where usr.id = edt.educator_id ) as seminars_count,
 (select rgn."name" from regions as rgn left 
 join user_posts as usp on rgn.user_post_id = usp.id  
 where usp.user_id  = usr.id limit 1) as region,
-(select edt."count" from educater as edt where usr.id = edt.educator_id ),
 (select rgn.structure_type from regions as rgn left 
 join user_posts as usp on rgn.user_post_id = usp.id  
 where usp.user_id  = usr.id limit 1) as type,
 usr.loreal_former_id, usr.matrix_former_id, usr.kerastase_former_id, usr.redken_former_id
-from users as usr
-
-
---where usr.last_request_at is not null
+from users as usr)
+select *
+from users_r
