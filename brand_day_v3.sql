@@ -65,9 +65,11 @@ edu.first_name || ' ' || edu.last_name as educator_name,
 	else 'in_salon: ' || sln.salon_name  end) as name_place,
 (case when sme.studio_id is not null then 'studio' else 'in_salon' end) as type_place,
 (case inte.region_level
+    when 7 then 'technolog1' 
 	when 6 then 'technolog' 
 	when 5 then 'manager'
 	when 4 then 'reg_technolog'
+	when 3 then 'Director'
 	end) as  role_name,
 inte.n1_full_name, inte.n2_full_name, inte.n3_full_name,
 sln.com_ter_name, sln.com_reg_name, sln.com_mreg_name, sln.salon_type, prt.user_count, to_char(sme.performed_at::timestamp at time zone 'UTC','dd.mm.YYYY') as PerformedDate,

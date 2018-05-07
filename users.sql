@@ -3,7 +3,13 @@ select sme.educator_id, count(distinct sme.id) as count
 from seminar_events as sme
 group by sme.educator_id),
 users_r as (
-select usr.id, usr.login, usr.first_name, usr.last_name, usr.email, lower(usr.email) as standart_email,  usr.mobile_number, 
+select usr.id, 
+usr.login, 
+usr.first_name, 
+usr.last_name, 
+usr.email, 
+lower(usr.email) as standart_email,  
+usr.mobile_number, 
 (case when char_length(usr.mobile_number) > 9 then replace(replace(replace(replace(replace(replace(usr.mobile_number, '+', ''), '(', '' ), ')', ''), '-', ''), ' ', ''), '−', '') else Null end) as standart_mobile,
 usr.login_count,
 usr.failed_login_count, to_char(usr.last_request_at,  'DD.MM.YYYY') as last_request,
@@ -12,8 +18,7 @@ usr.failed_login_count, to_char(usr.last_request_at,  'DD.MM.YYYY') as last_requ
 join user_posts as usp on rgn.user_post_id = usp.id  
 where usp.user_id  = usr.id limit 1) as region,
 (select rgn.structure_type from regions as rgn left 
-join user_posts as usp on rgn.user_post_id = usp.id  
-where usp.user_id  = usr.id limit 1) as type,
+join user_posts as usp on rgn.user_post_id = usp.id  where usp.user_id  = usr.id limit 1) as type,
 usr.loreal_former_id, usr.matrix_former_id, usr.kerastase_former_id, usr.redken_former_id
 from users as usr)
 select *
